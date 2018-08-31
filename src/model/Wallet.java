@@ -32,7 +32,7 @@ public class Wallet {
             SecureRandom random = SecureRandom.getInstance("SHA1PRNG");
             ECGenParameterSpec ecSpec = new ECGenParameterSpec("prime192v1");
             // Initialize the key generator and generate a KeyPair
-            keyGen.initialize(ecSpec, random);   //256 bytes provides an acceptable security level
+            keyGen.initialize(ecSpec, random);   // 256 bytes provides an acceptable security level
             KeyPair keyPair = keyGen.generateKeyPair();
             // Set the public and private keys from the keyPair
             privateKey = keyPair.getPrivate();
@@ -42,26 +42,26 @@ public class Wallet {
         }
     }
 
-    //returns balance and stores the UTXO's owned by this wallet in this.UTXOs
+    // Returns balance and stores the UTXO's owned by this wallet in this.UTXOs
     public float getBalance() {
         float total = 0;
         for (Map.Entry<String, TransactionOutput> item : Blockchain_Transactions.UTXOs.entrySet()) {
             TransactionOutput UTXO = item.getValue();
-            if (UTXO.isMine(publicKey)) { //if output belongs to me ( if coins belong to me )
-                UTXOs.put(UTXO.id, UTXO); //add it to our list of unspent transactions.
+            if (UTXO.isMine(publicKey)) { // If output belongs to me ( if coins belong to me )
+                UTXOs.put(UTXO.id, UTXO); // Add it to our list of unspent transactions.
                 total += UTXO.value;
             }
         }
         return total;
     }
-    //Generates and returns a new transaction from this wallet.
-
+    
+    // Generates and returns a new transaction from this wallet.
     public Transaction sendFunds(PublicKey _recipient, float value) {
         if (getBalance() < value) { //gather balance and check funds.
             System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
             return null;
         }
-        //create array list of inputs
+        // Create array list of inputs
         ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
 
         float total = 0;

@@ -57,7 +57,7 @@ public class Transaction {
         return StringUtil.verifyECDSASig(sender, data, signature);
     }
 
-    //Returns true if new transaction could be created.	
+    // Returns true if new transaction could be created.	
     public boolean processTransaction() {
 
         if (verifiySignature() == false) {
@@ -65,32 +65,32 @@ public class Transaction {
             return false;
         }
 
-        //gather transaction inputs (Make sure they are unspent):
+        // Gather transaction inputs (Make sure they are unspent):
         for (TransactionInput i : inputs) {
             i.UTXO = Blockchain_Transactions.UTXOs.get(i.transactionOutputId);
         }
 
-        //check if transaction is valid:
+        // Check if transaction is valid:
         if (getInputsValue() < Blockchain_Transactions.minimumTransaction) {
             System.out.println("#Transaction Inputs to small: " + getInputsValue());
             return false;
         }
 
-        //generate transaction outputs:
-        float leftOver = getInputsValue() - value; //get value of inputs then the left over change:
+        // Generate transaction outputs:
+        float leftOver = getInputsValue() - value; // Get value of inputs then the left over change:
         transactionId = calulateHash();
-        outputs.add(new TransactionOutput(this.reciepient, value, transactionId)); //send value to recipient
-        outputs.add(new TransactionOutput(this.sender, leftOver, transactionId)); //send the left over 'change' back to sender		
+        outputs.add(new TransactionOutput(this.reciepient, value, transactionId)); // Send value to recipient
+        outputs.add(new TransactionOutput(this.sender, leftOver, transactionId)); // Send the left over 'change' back to sender		
 
-        //add outputs to Unspent list
+        // Add outputs to Unspent list
         for (TransactionOutput o : outputs) {
             Blockchain_Transactions.UTXOs.put(o.id, o);
         }
 
-        //remove transaction inputs from UTXO lists as spent:
+        // Remove transaction inputs from UTXO lists as spent:
         for (TransactionInput i : inputs) {
             if (i.UTXO == null) {
-                continue; //if Transaction can't be found skip it 
+                continue; // If Transaction can't be found skip it 
             }
             Blockchain_Transactions.UTXOs.remove(i.UTXO.id);
         }
@@ -98,19 +98,19 @@ public class Transaction {
         return true;
     }
 
-//returns sum of inputs(UTXOs) values
+    // Returns sum of inputs(UTXOs) values
     public float getInputsValue() {
         float total = 0;
         for (TransactionInput i : inputs) {
             if (i.UTXO == null) {
-                continue; //if Transaction can't be found skip it 
+                continue; // If Transaction can't be found skip it 
             }
             total += i.UTXO.value;
         }
         return total;
     }
 
-//returns sum of outputs:
+    // Returns sum of outputs:
     public float getOutputsValue() {
         float total = 0;
         for (TransactionOutput o : outputs) {
