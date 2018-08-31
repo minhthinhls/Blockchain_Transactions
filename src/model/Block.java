@@ -5,6 +5,7 @@
  */
 package model;
 
+import java.util.ArrayList;
 import java.util.Date;
 import util.StringUtil;
 
@@ -16,26 +17,20 @@ public class Block {
 
     public String hash;
     public String previousHash;
-    private String data; //our data will be a simple message.
-    private long timeStamp; //as number of milliseconds since 1/1/1970.
+    public String merkleRoot;
+    public ArrayList<Transaction> transactions = new ArrayList<Transaction>(); // Our data will be a simple message.
+    private long timeStamp; // As number of milliseconds since 1/1/1970.
     private int nonce;
 
-    // Basic Block Constructor.
-    public Block() {
-
-    }
-    
     // Block Constructor for inserting data.
-    public Block(String data) {
-        this.data = data;
+    public Block() {
         this.previousHash = null;
         this.timeStamp = new Date().getTime();
         this.hash = calculateHash(); // Making sure we do this after we set the other values.
     }
 
     // Block Constructor use for tampering data !!!
-    public Block(String data, String previousHash) {
-        this.data = data;
+    public Block(String previousHash) {
         this.previousHash = previousHash;
         this.timeStamp = new Date().getTime();
         this.hash = calculateHash(); // Making sure we do this after we set the other values.
@@ -57,12 +52,20 @@ public class Block {
         this.previousHash = previousHash;
     }
 
-    public String getData() {
-        return data;
+    public ArrayList<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void setData(String data) {
-        this.data = data;
+    public void setTransactions(ArrayList<Transaction> transactions) {
+        this.transactions = transactions;
+    }
+
+    public String getMerkleRoot() {
+        return merkleRoot;
+    }
+
+    public void setMerkleRoot(String merkleRoot) {
+        this.merkleRoot = merkleRoot;
     }
 
     public long getTimeStamp() {
@@ -82,10 +85,11 @@ public class Block {
     }
 
     public String calculateHash() {
+        merkleRoot = StringUtil.getMerkleRoot(transactions);
         String calculatedhash = StringUtil.applySha256(
                 previousHash
                 + Long.toString(timeStamp)
-                + data + nonce
+                + merkleRoot + nonce
         );
         return calculatedhash;
     }
@@ -99,4 +103,20 @@ public class Block {
         System.out.println("Block Mined!!! : " + this.hash);
     }
 
+    // Add transactions to this block
+    public boolean addTransaction(Transaction transaction) {
+        // Process transaction and check if valid, unless block is genesis block then ignore.
+        if (transaction == null) {
+            return false;
+        }
+        if ((!"0".equals(previousHash))) {
+            if ((transaction.processTransaction() != true)) {
+                System.out.println("Transaction failed to process. Discarded.");
+                return false;
+            }
+        }
+        transactions.add(transaction);
+        System.out.println("Transaction Successfully added to Block");
+        return true;
+    }
 }
