@@ -21,6 +21,7 @@ public class Transaction {
     public PublicKey reciepient; // Recipients address/public key.
     public float value;
     public byte[] signature; // This is to prevent anybody else from spending funds in our wallet.
+    public static float minimumTransaction = 0.1f;
 
     public ArrayList<TransactionInput> inputs = new ArrayList<TransactionInput>();
     public ArrayList<TransactionOutput> outputs = new ArrayList<TransactionOutput>();
@@ -71,7 +72,7 @@ public class Transaction {
         }
 
         // Check if transaction is valid:
-        if (getInputsValue() < Blockchain_Transactions.minimumTransaction) {
+        if (getInputsValue() < minimumTransaction) {
             System.out.println("#Transaction Inputs to small: " + getInputsValue());
             return false;
         }

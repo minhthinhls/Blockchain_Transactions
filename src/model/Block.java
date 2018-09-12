@@ -109,7 +109,7 @@ public class Block {
         if (transaction == null) {
             return false;
         }
-        if ((!"0".equals(previousHash))) {
+        if ((!"Genesis".equals(previousHash))) {
             if ((transaction.processTransaction() != true)) {
                 System.out.println("Transaction failed to process. Discarded.");
                 return false;
