@@ -85,11 +85,11 @@ public class Block {
     }
 
     public String calculateHash() {
-        merkleRoot = StringUtil.getMerkleRoot(transactions);
+        this.merkleRoot = StringUtil.getMerkleRoot(this.transactions);
         String calculatedhash = StringUtil.applySha256(
-                previousHash
-                + Long.toString(timeStamp)
-                + merkleRoot + nonce
+                this.previousHash
+                + Long.toString(this.timeStamp)
+                + this.merkleRoot + this.nonce
         );
         return calculatedhash;
     }
@@ -109,13 +109,13 @@ public class Block {
         if (transaction == null) {
             return false;
         }
-        if ((!"Genesis".equals(previousHash))) {
+        if ((!"Genesis".equals(this.previousHash))) {
             if ((transaction.processTransaction() != true)) {
                 System.out.println("Transaction failed to process. Discarded.");
                 return false;
             }
         }
-        transactions.add(transaction);
+        this.transactions.add(transaction);
         System.out.println("Transaction Successfully added to Block");
         return true;
     }

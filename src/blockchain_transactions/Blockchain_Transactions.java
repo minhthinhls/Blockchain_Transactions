@@ -48,7 +48,7 @@ public class Blockchain_Transactions {
         // Verify the signature works and verify it from the public key
         System.out.println("\n*Is signature verified: " + transaction.verifiySignature());
          */
-        
+
         // Add our blocks to the blockchain ArrayList:
         Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider()); // Setup Bouncey castle as a Security Provider
 
@@ -92,15 +92,15 @@ public class Blockchain_Transactions {
         showBalance();
 
         blockchain.isChainValid();
-        
+
         String blockchainJson = new GsonBuilder().setPrettyPrinting().create().toJson(blockchain);
         System.out.println("\nThe block chain: ");
         System.out.println(blockchainJson);
     }
-    
+
     public static void showBalance() {
         System.out.println("WalletA's balance is: " + walletA.getBalance());
         System.out.println("WalletB's balance is: " + walletB.getBalance());
     }
-    
+
 }

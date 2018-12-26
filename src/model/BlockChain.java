@@ -86,7 +86,7 @@ public class BlockChain {
             throw new Exception("Genesis Block has already been created !!!");
         }
     }
-    
+
     public void generateGenesisBlock(Block genesisBlock) throws Exception {
         if (this.chain.isEmpty()) {
             System.out.println("Trying to mine Genesis Block...");

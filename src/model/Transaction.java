@@ -94,7 +94,7 @@ public class Transaction {
                 continue; // If Transaction can't be found skip it 
             }
             Blockchain_Transactions.UTXOs.remove(i.UTXO.id);
-        }
+        } // Delete all spended Transaction-Outputs based on ID in the block-chain network.
 
         return true;
     }
